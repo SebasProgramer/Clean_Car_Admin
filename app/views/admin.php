@@ -3,6 +3,12 @@ require_once '../models/ApiService.php';
 
 $apiService = new ApiService();
 
+// Manejar la eliminación de una reserva si se envía una solicitud POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    $idReserva = $_POST['delete_id'];
+    $apiService->deleteReserva($idReserva); // Función que llamará al endpoint de eliminación
+}
+
 // Obtener las reservas, categorías y tipos de lavado desde la API
 $reservas = $apiService->getReservas();
 $categorias = $apiService->getCategorias();
@@ -105,6 +111,16 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
+                            <div class="card-header">Reservas Confirmadas</div>
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $serviciosActivos ?> Reservas</h5>
+                                <p class="card-text">Todas las reservas confirmadas.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>        
         </div> <br> <br>
@@ -139,13 +155,15 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                                         <?php if ($reserva['estado_reserva'] === 'Pendiente'): ?>
                                             <button class="btn btn-success btn-sm me-3 rounded">Confirmar</button> <!-- Bordes redondeados -->
                                         <?php endif; ?>
-                                        <button class="btn btn-danger btn-sm rounded">Cancelar</button> <!-- Bordes redondeados -->
+                                        <form method="POST" action="admin.php" style="display:inline;">
+                                            <input type="hidden" name="delete_id" value="<?= $reserva['id_reserva'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm rounded">Cancelar</button> <!-- Bordes redondeados -->
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
         </div>        
