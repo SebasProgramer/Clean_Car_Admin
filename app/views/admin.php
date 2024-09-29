@@ -70,22 +70,7 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Reservas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Servicios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Empleados</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Notificaciones</a>
-                    </li>
+                    </li>                    
                 </ul>
             </div>
         </div>
@@ -96,30 +81,33 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
         <div class="row">
             <div class="col-md-12">
                 <h2 class="text-center">Panel de Administración</h2>
-            </div>
+            </div> <br> <br> <br> 
 
             <!-- Tarjetas de resumen -->
-            <div class="col-md-3">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">Reservas Pendientes</div>
-                    <div class="card-body">
-                        <h5 class="card-title"><?= $reservasPendientes ?> Reservas</h5>
-                        <p class="card-text">Revisa las reservas pendientes de confirmación.</p>
+            <div class="container admin-panel">
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
+                            <div class="card-header">Reservas Pendientes</div>
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $reservasPendientes ?> Reservas</h5>
+                                <p class="card-text">Revisa las reservas pendientes de confirmación.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
+                            <div class="card-header">Servicios Activos</div>
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $serviciosActivos ?> Servicios</h5>
+                                <p class="card-text">Gestión de los servicios ofrecidos.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-header">Servicios Activos</div>
-                    <div class="card-body">
-                        <h5 class="card-title"><?= $serviciosActivos ?> Servicios</h5>
-                        <p class="card-text">Gestión de los servicios ofrecidos.</p>
-                    </div>
-                </div>
-            </div>
-        </div>        
-
+            </div>        
+        </div> <br> <br>
 
         <!-- Sección de gestión de reservas -->
         <div class="row">
@@ -147,10 +135,12 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                                 <td><?= $reserva['fecha_hora_reserva'] ?></td>
                                 <td><?= $reserva['estado_reserva'] ?></td>
                                 <td>
-                                    <?php if ($reserva['estado_reserva'] === 'Pendiente'): ?>
-                                        <button class="btn btn-success btn-sm">Confirmar</button>
-                                    <?php endif; ?>
-                                    <button class="btn btn-danger btn-sm">Cancelar</button>
+                                    <div class="btn-group" role="group">
+                                        <?php if ($reserva['estado_reserva'] === 'Pendiente'): ?>
+                                            <button class="btn btn-success btn-sm me-3 rounded">Confirmar</button> <!-- Bordes redondeados -->
+                                        <?php endif; ?>
+                                        <button class="btn btn-danger btn-sm rounded">Cancelar</button> <!-- Bordes redondeados -->
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -158,14 +148,7 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
 
                 </table>
             </div>
-        </div>
-
-        <!-- Botón para regresar al índice -->
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <a href="index.html" class="btn btn-secondary">Volver al Inicio</a>
-            </div>
-        </div>
+        </div>        
     </div>
 
     <!-- Scripts de Bootstrap -->
