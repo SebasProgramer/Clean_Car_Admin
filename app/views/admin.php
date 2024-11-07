@@ -46,6 +46,9 @@ $serviciosActivos = count($apiService->getTiposLavado());
         .card {
             margin-bottom: 20px;
         }
+        .dropdown-menu a {
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -118,11 +121,15 @@ $serviciosActivos = count($apiService->getTiposLavado());
                     </thead>
                     <tbody>
                         <?php foreach ($reservas as $reserva): ?>
+                            <?php
+                                $numeroTelefono = $reserva['celular_cliente'];
+                                $nombreCliente = $reserva['nombre_cliente'];
+                            ?>
                             <tr>
                                 <td><?= $reserva['id_reserva'] ?></td>
-                                <td><?= $reserva['nombre_cliente'] ?></td>
-                                <td><?= $reserva['tipo_categoria'] ?></td> <!-- Utilizando el tipo de categoría directamente -->
-                                <td><?= $reserva['descripcion_tipo_lavado'] ?></td> <!-- Utilizando la descripción del tipo de lavado directamente -->
+                                <td><?= $nombreCliente ?></td>
+                                <td><?= $reserva['tipo_categoria'] ?></td>
+                                <td><?= $reserva['descripcion_tipo_lavado'] ?></td>
                                 <td><?= $reserva['fecha_hora_reserva'] ?></td>
                                 <td><?= $reserva['estado_reserva'] ?></td>
                                 <td>
@@ -137,6 +144,30 @@ $serviciosActivos = count($apiService->getTiposLavado());
                                             <input type="hidden" name="delete_id" value="<?= $reserva['id_reserva'] ?>">
                                             <button type="submit" class="btn btn-danger btn-sm rounded">Cancelar</button>
                                         </form>
+                                        
+                                        <!-- Botón de menú desplegable para mensajes -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm rounded ms-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                ...
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item" href="https://wa.me/<?= $numeroTelefono ?>?text=<?= urlencode("Estimado Cliente {$nombreCliente}, le mandamos este mensaje para informarle que su reserva ha sido confirmada.") ?>" target="_blank">
+                                                        Mensaje de Confirmación
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="https://wa.me/<?= $numeroTelefono ?>?text=<?= urlencode("Estimado Cliente {$nombreCliente}, le mandamos este mensaje para informarle que su reserva ha sido rechazada.") ?>" target="_blank">
+                                                        Mensaje de Rechazado
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="https://wa.me/<?= $numeroTelefono ?>?text=<?= urlencode("Estimado Cliente {$nombreCliente}, le informamos que su vehiculo ya ha sido lavado, puede pasar a recogerlo, gracias.") ?>" target="_blank">
+                                                        Mensaje de Aviso
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
