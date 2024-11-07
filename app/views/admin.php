@@ -3,37 +3,22 @@ require_once '../models/ApiService.php';
 
 $apiService = new ApiService();
 
-// Manejar la eliminación de una reserva si se envía una solicitud POST
+// Manejar la confirmación de una reserva si se envía un POST con 'confirm_id'
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_id'])) {
+    $idReserva = $_POST['confirm_id'];
+    $apiService->confirmarReserva($idReserva);
+}
+
+// Manejar la eliminación de una reserva si se envía un POST con 'delete_id'
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $idReserva = $_POST['delete_id'];
-    $apiService->deleteReserva($idReserva); // Función que llamará al endpoint de eliminación
+    $apiService->deleteReserva($idReserva);
 }
 
 // Obtener las reservas, categorías y tipos de lavado desde la API
 $reservas = $apiService->getReservas();
-$categorias = $apiService->getCategorias();
-$tiposLavado = $apiService->getTiposLavado();
-$reservasPendientes = $apiService->getReservasPendientes();
+$reservasPendientes = count($apiService->getReservasPendientes());
 $serviciosActivos = count($apiService->getTiposLavado());
-
-// Funciones para obtener la descripción de categoría y tipo de lavado
-function obtenerCategoria($idCategoria, $categorias) {
-    foreach ($categorias as $categoria) {
-        if ($categoria['id_categoria'] == $idCategoria) {
-            return $categoria['tipo'];
-        }
-    }
-    return 'Sin Categoría';
-}
-
-function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
-    foreach ($tiposLavado as $tipo) {
-        if ($tipo['id_tipo_lavado'] == $idTipoLavado) {
-            return $tipo['descripcion'];
-        }
-    }
-    return 'Sin Tipo de Lavado';
-}
 ?>
 
 <!DOCTYPE html>
@@ -93,7 +78,7 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
             <div class="container admin-panel">
                 <div class="row justify-content-center">
                     <div class="col-md-3">
-                        <div class="card text-white bg-primary mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
+                        <div class="card text-white bg-primary mb-3 h-100">
                             <div class="card-header">Reservas Pendientes</div>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $reservasPendientes ?> Reservas</h5>
@@ -103,21 +88,11 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-white bg-success mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
+                        <div class="card text-white bg-success mb-3 h-100">
                             <div class="card-header">Servicios Activos</div>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $serviciosActivos ?> Servicios</h5>
                                 <p class="card-text">Gestión de los servicios ofrecidos.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success mb-3 h-100"> <!-- Agregar h-100 para igualar altura -->
-                            <div class="card-header">Reservas Confirmadas</div>
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $serviciosActivos ?> Reservas</h5>
-                                <p class="card-text">Todas las reservas confirmadas.</p>
                             </div>
                         </div>
                     </div>
@@ -146,18 +121,21 @@ function obtenerTipoLavado($idTipoLavado, $tiposLavado) {
                             <tr>
                                 <td><?= $reserva['id_reserva'] ?></td>
                                 <td><?= $reserva['nombre_cliente'] ?></td>
-                                <td><?= $reserva['tipo_categoria'] ?></td> <!-- Mostrar directamente el tipo de categoría (S, M, L, XL) -->
-                                <td><?= $reserva['descripcion_tipo_lavado'] ?></td> <!-- Mostrar directamente la descripción del tipo de lavado -->
+                                <td><?= $reserva['tipo_categoria'] ?></td> <!-- Utilizando el tipo de categoría directamente -->
+                                <td><?= $reserva['descripcion_tipo_lavado'] ?></td> <!-- Utilizando la descripción del tipo de lavado directamente -->
                                 <td><?= $reserva['fecha_hora_reserva'] ?></td>
                                 <td><?= $reserva['estado_reserva'] ?></td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <?php if ($reserva['estado_reserva'] === 'Pendiente'): ?>
-                                            <button class="btn btn-success btn-sm me-3 rounded">Confirmar</button> <!-- Bordes redondeados -->
+                                            <form method="POST" action="admin.php" style="display:inline;">
+                                                <input type="hidden" name="confirm_id" value="<?= $reserva['id_reserva'] ?>">
+                                                <button type="submit" class="btn btn-success btn-sm me-3 rounded">Confirmar</button>
+                                            </form>
                                         <?php endif; ?>
                                         <form method="POST" action="admin.php" style="display:inline;">
                                             <input type="hidden" name="delete_id" value="<?= $reserva['id_reserva'] ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm rounded">Cancelar</button> <!-- Bordes redondeados -->
+                                            <button type="submit" class="btn btn-danger btn-sm rounded">Cancelar</button>
                                         </form>
                                     </div>
                                 </td>

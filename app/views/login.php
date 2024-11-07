@@ -95,7 +95,7 @@
     <div class="container login-container">
         <div class="login-box">
             <div class="login-left">
-                <img src="/Clean_Car_Administrador/assets/logo.png" alt="Logo"> <!-- Imagen centrada y ajustada -->
+                <img src="/Clean_Car_Admin/assets/logo.png" alt="Logo"> <!-- Imagen centrada y ajustada -->
             </div>
             <div class="login-right">
                 <h2>Bienvenido, Admin</h2>

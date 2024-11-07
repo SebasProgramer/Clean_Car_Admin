@@ -12,7 +12,7 @@ class AuthController {
             $user = new User();
             if ($user->authenticate($username, $password)) {
                 // Redirigir al panel de administración
-                header("Location: /Clean_Car_Administrador/app/views/admin.php");
+                header("Location: /Clean_Car_Admin/app/views/admin.php");
                 exit();
             } else {
                 // Mensaje de error si las credenciales no coinciden
